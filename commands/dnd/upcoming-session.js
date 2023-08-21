@@ -16,6 +16,7 @@ module.exports = {
                 .setDescription('Return all sessions?')
         ),
     async execute(interaction) {
+        await interaction.deferReply();
         let all = interaction.options.getBoolean('all') ?? false;
         let query = '';
 
@@ -34,7 +35,7 @@ module.exports = {
             let response = await pool.query(query);
             let reply = '';
             if(response.rows.length === 0) {
-                await interaction.reply({ content: 'No sessions found', ephemeral: true});
+                await interaction.editReply({ content: 'No sessions found', ephemeral: true});
                 return;
             }
 
@@ -43,10 +44,10 @@ module.exports = {
                 reply += `Date: ${formattedDate} \nLocation: ${row.location}\nid:${row.id}\n\n`;
             }
 
-            await interaction.reply({ content: reply });
+            await interaction.editReply({ content: reply, ephemeral: true });
         } catch(error) {
             console.error('Error fetching session(s):', error);
-            await interaction.reply({ content: 'Error fetching session(s):' + error.detail, ephemeral: true});
+            await interaction.editReply({ content: 'Error fetching session(s):' + error.detail, ephemeral: true});
         }
 
     }

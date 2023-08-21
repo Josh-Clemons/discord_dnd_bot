@@ -16,6 +16,7 @@ module.exports = {
                 .setDescription('Enter the address')
                 .setRequired(true)),
     async execute(interaction) {
+        await interaction.deferReply();
         let name = interaction.options.getString('name');
         let address = interaction.options.getString('address');
 
@@ -29,10 +30,10 @@ module.exports = {
                 `INSERT INTO addresses (name, address) VALUES ($1, $2)`,
                 [name.toUpperCase(), address]
             );
-            await interaction.reply({ content: "User address saved", ephemeral: true });
+            await interaction.editReply({ content: "User address saved", ephemeral: true });
         } catch(error) {
             console.error('Error saving address', error);
-            await interaction.reply({content: 'Error saving: ' + error.detail, ephemeral: true});
+            await interaction.editReply({content: 'Error saving: ' + error.detail, ephemeral: true});
         }
 
     },

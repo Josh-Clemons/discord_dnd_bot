@@ -28,6 +28,7 @@ module.exports = {
                 .setDescription('Who is hosting?')
         ),
     async execute(interaction) {
+        await interaction.deferReply();
         const date = interaction.options.getString('date');
         const time = interaction.options.getString('time') ?? '00:00';
         const location = interaction.options.getString('location') ?? 'Not set';
@@ -41,10 +42,10 @@ module.exports = {
                 `INSERT INTO sessions (datetime, location) VALUES ($1, $2)`,
                 [formattedDateTimeString, location]
             );
-            await interaction.reply({ content: "Session saved!", ephemeral: true});
+            await interaction.editReply({ content: "Session saved!", ephemeral: true});
         } catch(error) {
             console.error('Error saving session:', error);
-            await interaction.reply({ content: 'Error saving session' + error.detail, ephemeral: true})
+            await interaction.editReply({ content: 'Error saving session' + error.detail, ephemeral: true})
         }
     }
 }

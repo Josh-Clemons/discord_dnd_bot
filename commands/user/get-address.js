@@ -11,6 +11,7 @@ module.exports = {
                 .setDescription('Name of person, if left empty all addresses are returned')
         ),
     async execute(interaction) {
+        await interaction.deferReply();
         let name = interaction.options.getString('name');
         let query = '';
         let params;
@@ -28,20 +29,19 @@ module.exports = {
             let reply = "";
 
             if(response.rows.length === 0) {
-                await interaction.reply({
+                await interaction.editReply({
                     content: `User not found with name: ${name}`,
                     ephemeral: true});
                 return;
             }
-
             for(let row of response.rows) {
-                reply += + `Name: ${row.name} \nAddress: ${row.address} \n\n`
+                reply = reply + `Name: ${row.name} \nAddress: ${row.address} \n\n`
             }
 
-            await interaction.reply({content: reply, ephemeral: true})
+            await interaction.editReply({content: reply, ephemeral: true})
         } catch(error) {
             console.error('Error fetching addresses', error)
-            await interaction.reply({ content: "Error finding: " + error.detail, ephemeral: true })
+            await interaction.editReply({ content: "Error finding: " + error.detail, ephemeral: true })
         }
     }
 }

@@ -31,6 +31,7 @@ module.exports = {
                 .setDescription('New hosting location')
         ),
     async execute(interaction) {
+        await interaction.deferReply();
         const sessionId = interaction.options.getInteger('session_id');
         const newDate = interaction.options.getString('date');
         const newTime = interaction.options.getString('time');
@@ -43,7 +44,7 @@ module.exports = {
             );
 
             if (sessionResponse.rows.length === 0) {
-                await interaction.reply({ content: 'Session not found', ephemeral: true });
+                await interaction.editReply({ content: 'Session not found', ephemeral: true });
                 return;
             }
 
@@ -65,10 +66,10 @@ module.exports = {
                 [formattedUpdatedDateTimeString, updatedLocation, sessionId]
             );
 
-            await interaction.reply({ content: 'Session updated successfully!', ephemeral: true });
+            await interaction.editReply({ content: 'Session updated successfully!', ephemeral: true });
         } catch (error) {
             console.error('Error updating session:', error);
-            await interaction.reply({ content: 'Error updating session' + error.detail, ephemeral: true });
+            await interaction.editReply({ content: 'Error updating session' + error.detail, ephemeral: true });
         }
     }
 };

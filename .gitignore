@@ -1,3 +1,5 @@
 node_modules
 .env
 config.json
+# deploy-commands has a couple sensitive pieces of data
+deploy-commands.js
