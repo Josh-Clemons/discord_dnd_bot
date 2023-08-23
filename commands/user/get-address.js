@@ -21,7 +21,7 @@ module.exports = {
             params = [name];
             query = `SELECT * FROM "public"."addresses" WHERE name=$1;`
         } else {
-            query = `SELECT * FROM "public"."addresses";`
+            query = `SELECT * FROM "public"."addresses" ORDER BY name ASC;`
         }
 
         try {
@@ -35,7 +35,7 @@ module.exports = {
                 return;
             }
             for(let row of response.rows) {
-                reply = reply + `Name: ${row.name} \nAddress: ${row.address} \n\n`
+                reply = reply + `Name: ${row.name} \nAddress: ${row.address}\n\n`
             }
 
             await interaction.editReply({content: reply, ephemeral: true})

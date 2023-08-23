@@ -21,7 +21,7 @@ module.exports = {
         let query = '';
 
         if(all) {
-            query = `SELECT * FROM sessions;`
+            query = `SELECT * FROM sessions WHERE datetime > now() ORDER BY datetime ASC;`
         } else {
             query = `
                 SELECT * 

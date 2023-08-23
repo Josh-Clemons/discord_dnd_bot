@@ -3,7 +3,7 @@ const pool = require('../../database');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('set-address')
+        .setName('save-address')
         .setDescription('Saves a users address to the database')
         .addStringOption(option =>
             option

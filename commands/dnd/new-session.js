@@ -1,16 +1,19 @@
 const { SlashCommandBuilder } = require('discord.js');
 const dayjs = require('dayjs');
-const pool = require('../../database');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
+const timezone = require('dayjs/plugin/timezone'); // Import the timezone plugin
+const utc = require('dayjs/plugin/utc'); // Import the utc plugin
+const pool = require('../../database');
 
 dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('set-session')
+        .setName('new-session')
         .setDescription('Saves a session')
-        // for the below option, I would like to use day.js to save the date and time of the next session. How do I configure it so the user can enter a date and the code is able to handle it appropriately?
         .addStringOption(option  =>
             option
                 .setName('date')
@@ -35,14 +38,14 @@ module.exports = {
 
         try {
             const dateTimeString = `${date} ${time}`;
-            const formattedDateTime = dayjs(dateTimeString, `YYYY-MM-DD HH:mm`);
-            const formattedDateTimeString = formattedDateTime.format('YYYY-MM-DD HH:mm:ss');
+            const formattedDateTime = dayjs.tz(dateTimeString, 'America/Chicago');
+            const formattedDateTimeString = formattedDateTime.tz('America/Chicago').format('YYYY-MM-DD HH:mm:ss');
 
             await pool.query(
                 `INSERT INTO sessions (datetime, location) VALUES ($1, $2)`,
                 [formattedDateTimeString, location]
             );
-            await interaction.editReply({ content: "Session saved!", ephemeral: true});
+            await interaction.editReply({ content: `Session saved! ${formattedDateTime} @ ${location}'s`});
         } catch(error) {
             console.error('Error saving session:', error);
             await interaction.editReply({ content: 'Error saving session' + error.detail, ephemeral: true})

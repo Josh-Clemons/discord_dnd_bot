@@ -1,9 +1,13 @@
 const { SlashCommandBuilder } = require('discord.js');
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
+const timezone = require('dayjs/plugin/timezone'); // Import the timezone plugin
+const utc = require('dayjs/plugin/utc'); // Import the utc plugin
 const pool = require('../../database');
 
 dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -54,10 +58,11 @@ module.exports = {
             let updatedDateTime = currentDateTime;
             if (newDate || newTime) {
                 const newDateTimeString = `${newDate || currentDateTime.format('YYYY-MM-DD')} ${newTime || currentDateTime.format('HH:mm')}`;
-                updatedDateTime = dayjs(newDateTimeString, 'YYYY-MM-DD HH:mm');
+                updatedDateTime = dayjs.tz(newDateTimeString, 'America/Chicago');
+                console.log(updatedDateTime);
             }
 
-            const formattedUpdatedDateTimeString = updatedDateTime.format('YYYY-MM-DD HH:mm:ss');
+            const formattedUpdatedDateTimeString = updatedDateTime.tz('America/Chicago').format('YYYY-MM-DD HH:mm:ss z');
 
             const updatedLocation = newLocation || session.location;
 
@@ -66,7 +71,7 @@ module.exports = {
                 [formattedUpdatedDateTimeString, updatedLocation, sessionId]
             );
 
-            await interaction.editReply({ content: 'Session updated successfully!', ephemeral: true });
+            await interaction.editReply({ content: `Session saved! ${updatedDateTime} @ ${updatedLocation}'s`});
         } catch (error) {
             console.error('Error updating session:', error);
             await interaction.editReply({ content: 'Error updating session' + error.detail, ephemeral: true });
