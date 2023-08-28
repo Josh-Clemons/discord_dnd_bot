@@ -44,7 +44,7 @@ module.exports = {
                 reply += `Date: ${formattedDate} \nLocation: ${row.location}\nid:${row.id}\n\n`;
             }
 
-            await interaction.editReply({ content: reply, ephemeral: true });
+            await interaction.editReply({ content: reply });
         } catch(error) {
             console.error('Error fetching session(s):', error);
             await interaction.editReply({ content: 'Error fetching session(s):' + error.detail, ephemeral: true});

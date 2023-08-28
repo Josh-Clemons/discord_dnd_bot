@@ -17,8 +17,7 @@ module.exports = {
         let params;
 
         if(name) {
-            name = name.toUpperCase();
-            params = [name];
+            params = [name.toUpperCase()];
             query = `SELECT * FROM "public"."addresses" WHERE name=$1;`
         } else {
             query = `SELECT * FROM "public"."addresses" ORDER BY name ASC;`
@@ -35,7 +34,11 @@ module.exports = {
                 return;
             }
             for(let row of response.rows) {
-                reply = reply + `Name: ${row.name} \nAddress: ${row.address}\n\n`
+                if(name === null) {
+                    reply = reply + `Name: ${row.name} \nAddress: ${row.address}\n\n`
+                } else {
+                    reply = reply + `Name: ${name} \nAddress: ${row.address}\n\n`
+                }
             }
 
             await interaction.editReply({content: reply, ephemeral: true})

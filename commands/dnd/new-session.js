@@ -27,14 +27,14 @@ module.exports = {
         )
         .addStringOption(option =>
             option
-                .setName('location')
+                .setName('host')
                 .setDescription('Who is hosting?')
         ),
     async execute(interaction) {
         await interaction.deferReply();
         const date = interaction.options.getString('date');
         const time = interaction.options.getString('time') ?? '00:00';
-        const location = interaction.options.getString('location') ?? 'Not set';
+        const location = interaction.options.getString('host') ?? 'Not set';
 
         try {
             const dateTimeString = `${date} ${time}`;

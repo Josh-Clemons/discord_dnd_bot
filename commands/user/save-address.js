@@ -30,7 +30,7 @@ module.exports = {
                 `INSERT INTO addresses (name, address) VALUES ($1, $2)`,
                 [name.toUpperCase(), address]
             );
-            await interaction.editReply({ content: "User address saved", ephemeral: true });
+            await interaction.editReply({ content: name + "'s address saved," + address });
         } catch(error) {
             console.error('Error saving address', error);
             await interaction.editReply({content: 'Error saving: ' + error.detail, ephemeral: true});

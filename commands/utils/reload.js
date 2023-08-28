@@ -32,10 +32,12 @@ module.exports = {
             delete require.cache[require.resolve(targetCommandFilePath)];
             const newCommand = require(targetCommandFilePath);
             interaction.client.commands.set(newCommand.data.name, newCommand);
-            await interaction.reply(`Command \`${newCommand.data.name}\` was reloaded!`);
+            await interaction.reply({content: `Command \`${newCommand.data.name}\` was reloaded!`, ephemeral: true});
         } catch (error) {
             console.error(error);
-            await interaction.reply(`There was an error while reloading command \`${command.data.name}\` :\n\`${error.message}\``);
+            await interaction.reply({
+                content: `There was an error while reloading command \`${command.data.name}\` :\n\`${error.message}\``,
+                ephemeral: true});
         }
     }
 }

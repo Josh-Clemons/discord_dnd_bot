@@ -37,8 +37,8 @@ module.exports = {
 
             counter ++;
             const messageIndex = Math.floor(Math.random() * messages.length);
-            const guildId = '1141089605588877463';
-            const channelId = '1141089606306115798';
+            const guildId = process.env.GUILD_ID;
+            const channelId = process.env.CHANNEL_ID;
             const guild = client.guilds.cache.get(guildId);
             const channel = guild.channels.cache.get(channelId);
 

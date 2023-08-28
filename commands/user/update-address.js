@@ -43,7 +43,7 @@ module.exports = {
                 [name.toUpperCase(), updatedAddress]
             );
 
-            await interaction.editReply({ content: 'Address updated', ephemeral: true });
+            await interaction.editReply({ content: `${name}'s address updated, ${updatedAddress}` });
         } catch (error) {
             console.error('Error updating address', error);
             await interaction.editReply({ content: 'Error updating: ' + error.detail, ephemeral: true });
