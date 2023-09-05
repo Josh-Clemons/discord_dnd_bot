@@ -19,23 +19,19 @@ const messages = [
     "I'm going to send you chain letters if a session is not scheduled!"
 ]
 
-let counter = 1;
-
 module.exports = {
     name: Events.ClientReady,
     once: true,
     execute(client) {
         // Schedule the task to run at a random day (Sunday to Saturday) between 8 AM and 8 PM
-        const randomDay = Math.floor(Math.random() * 7); // 0 (Sunday) to 6 (Saturday)
-        const randomHour = Math.floor(Math.random() * 13) + 8; // 8 AM to 8 PM
+        const rule = new schedule.RecurrenceRule();
+        rule.dayOfWeek = [0, 1, 2, 3, 4, 5, 6]; // All days of the week
+        rule.hour = Math.floor(Math.random() * 13) + 8; // 8 AM to 8 PM
 
-        schedule.scheduleJob({ dayOfWeek: randomDay, hour: randomHour }, async () => {
-        // schedule.scheduleJob('*/1 * * * *', async () => {
+        const job = schedule.scheduleJob(rule, async () => {
             // checks to see if a session is scheduled before continuing
             const response = await pool.query(`SELECT * FROM sessions WHERE datetime > now()`);
-            if(response.rows.length > 0 && counter !== 0) return;
 
-            counter ++;
             const messageIndex = Math.floor(Math.random() * messages.length);
             const guildId = process.env.GUILD_ID;
             const channelId = process.env.CHANNEL_ID;
@@ -43,8 +39,15 @@ module.exports = {
             const channel = guild.channels.cache.get(channelId);
 
             if (channel) {
-                channel.send(`@here ${messages[messageIndex]}`);
+                channel.send(`@everyone ${messages[messageIndex]}`);
             }
+
+            // Reschedule the job to run at a random time within the next 7 days
+            const nextRandomDay = (Math.floor(Math.random() * 7) + new Date().getDay()) % 7;
+            rule.dayOfWeek = [nextRandomDay];
+            rule.hour = Math.floor(Math.random() * 13) + 8;
+
+            job.reschedule(rule);
         });
     },
 };

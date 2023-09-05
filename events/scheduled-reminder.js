@@ -7,8 +7,7 @@ module.exports = {
     name: Events.ClientReady,
     once: true,
     execute(client) {
-        schedule.scheduleJob('0 19 * * *', async () => {
-        // schedule.scheduleJob('*/1 * * * *', async () => {
+        const job = schedule.scheduleJob('0 19 * * *', async () => {
             // checks to see if a session is scheduled before continuing
             const response = await pool.query(`SELECT * FROM sessions WHERE datetime > now() ORDER BY datetime ASC`);
             if(response.rows.length === 0) return;

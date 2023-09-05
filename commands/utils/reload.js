@@ -15,7 +15,8 @@ module.exports = {
         const command = interaction.client.commands.get(commandName);
 
         if (!command) {
-            return interaction.reply(`No command with name \`${commandName}\`!`);
+            return interaction.reply({content: `No command with name \`${commandName}\`!`,
+                ephemeral: true});
         }
 
         const targetCommandName = command.data.name;
